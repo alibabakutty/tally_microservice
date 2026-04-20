@@ -1,0 +1,198 @@
+<!--<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <style>
+        @page {
+            size: A4;
+            margin: 0.5cm; /* Smaller margins = wider content area */
+        }
+
+        body {
+          font-family: 'Noto Sans', Arial, sans-serif;
+          font-size: 12px;
+          margin: 0;
+          padding: 0;
+        }
+
+        .container {
+          width: 100%; /* Changed from 800px to 100% for better PDF fitting */
+          margin: 10px auto;
+        }
+
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          table-layout: fixed; /* Ensures table doesn't overflow PDF width */
+        }
+
+        td, th {
+          border: 1px solid black;
+          padding: 4px;
+          vertical-align: top;
+          word-wrap: break-word;
+        }
+
+        .no-border td {
+          border: none;
+        }
+
+        .center {
+          text-align: center;
+        }
+
+        .right {
+          text-align: right;
+        }
+
+        .bold {
+          font-weight: bold;
+        }
+
+        .small {
+          font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+<div style="text-align: right; font-size: 11px; margin-bottom: 4px;">
+    (ORIGINAL FOR RECIPIENT)
+</div>
+<div class="container">
+    <div style="display: table; width: 100%; border: 1px solid black;">
+        <div style="display: table-row;">
+
+            <!-- LEFT -->
+            <div style="display: table-cell; width: 25%; padding: 4px;">
+                <img th:src="@{classpath:static/logo.png}" width="100" height="100" />
+            </div>
+
+            <!-- CENTER -->
+            <div style="display: table-cell; width: 75%; padding: 4px; text-align: center; vertical-align: top;">
+                <div class="bold">Kanishka Construction Company</div>
+                <div class="small">
+                    OFFICE: Flat No.58, No. 25/6 House of JAYAM VYBHAKAR, Nehru Street,<br/>
+                    Chennai - 600028<br/>
+                    GSTIN/UIN: 33AABCLT470K1Z4
+                </div>
+            </div>
+
+            <!-- RIGHT -->
+
+        </div>
+    </div>
+
+    <table>
+        <tr>
+            <td style="width: 50%;">
+                <div class="center">
+                    <b>PURCHASE ORDER</b>
+                </div>
+                <b th:text="${customerName}">Acc Limited</b><br/>
+                <span th:text="${address}">Survey No.505/1...</span><br/>
+                <b>GSTIN:</b> 33AAACT1507C1Z4
+            </td>
+            <td style="width: 50%;">
+                <b style="margin-right: 5px">Voucher No:</b> <span th:text="${invoiceNo}">POM-001</span>
+                <b style="margin-left: 10px; margin-right: 5px">Date:</b> <span th:text="${date}">21-4-2026</span><br/>
+
+                <b style="margin-right: 33.8px">PO No:</b> <span th:text="${invoiceNo}">POM-001</span>
+                <b style="margin-left: 11.5px; margin-right: 5px">Date:</b> <span th:text="${date}">21-4-2026</span><br/><br/>
+
+
+                <b>Site Address:</b><br/>
+                KANISHKA CIVIL ENGINEERING PRIVATE LIMITED<br/>
+                Flat No.2B, No.56 House of JAYAM VYBHAKAR,<br/>
+                Vinyam Road, Mandaveli, Chennai-600028
+            </td>
+        </tr>
+    </table>
+
+    <table>
+        <thead>
+        <tr class="center bold">
+            <td style="width: 8%;">S.No</td>
+            <td style="width: 12%;">Part No</td>
+            <td style="width: 32%;">Description</td>
+            <td style="width: 12%;">HSN/SAC</td>
+            <td style="width: 12%;">GST</td>
+            <td style="width: 10%;">Qty</td>
+            <td style="width: 12%;">Rate</td>
+            <td style="width: 10%;">Unit</td>
+            <td style="width: 16%;">Value</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item, iterStat : ${items}">
+            <td class="center" th:text="${iterStat.count}">1</td>
+            <td th:text="${item.partNo}">-</td>
+            <td th:text="${item.name}">GI Bend</td>
+            <td th:text="${item.hsn}">-</td>
+            <td class="center" th:text="${item.gst + ' %'}">-</td>
+            <td class="right" th:text="${#numbers.formatDecimal(item.qty, 1, 2)}">10.00</td>
+            <td class="right" th:text="${item.formattedRate}">150.00</td>
+            <td class="center" th:text="${item.uom}">Nos</td>
+            <td class="right" th:text="${item.formattedAmount}">1500.00</td>
+        </tr>
+        <tr th:if="${spacerHeight > 0}">
+            <td th:style="'height:' + ${spacerHeight} + 'px;'"></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="8" class="right bold">Total</td>
+            <td class="right bold" th:text="${formattedTotal}">25,742.03</td>
+        </tr>
+        </tfoot>
+    </table>
+
+    <table>
+        <tr>
+            <td>
+                <b>Amount in Words:</b><br/>
+                <span th:text="${totalInWords}">Twenty Five Thousand...</span>
+            </td>
+        </tr>
+    </table>
+
+    <table>
+        <tr>
+            <td colspan="2" class="center bold">Bank Details</td>
+        </tr>
+        <tr>
+            <td style="width: 30%; border-right: none;">
+                Bank Name:<br/>
+                A/c Name:<br/>
+                A/c No:<br/>
+                Branch:<br/>
+                IFSC:
+            </td>
+            <td style="width: 70%; border-left: none;"></td>
+        </tr>
+    </table>
+
+    <table>
+        <tr>
+            <td style="width: 50%; border-right: none;">
+                Receiver Signature<br/><br/>
+                Date:<br/>
+                Time:
+            </td>
+            <td class="right" style="width: 50%; border-left: none;">
+                For Kanishka Construction Company<br/><br/><br/>
+                Authorized Signatory
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>
